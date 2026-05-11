@@ -16,8 +16,8 @@ Create `config.yaml`:
 
 ```yaml
 xiaomi:
-  app_id: "XILANY1_S_A"
-  app_key: "957a96f9-a058-45da-90cf-a7dd1b491466"
+  app_id: "lalala"
+  app_key: "lalala"
   account_id: 18348
   campaign_id: 276730
 
