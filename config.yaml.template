@@ -1,0 +1,131 @@
+# MiAds Daily Report Configuration Template
+# Copy to config.yaml and fill in your credentials
+
+# Xiaomi MiAds API Configuration
+xiaomi:
+  # API credentials (get from Xiaomi dashboard)
+  app_id: "XILANY1_S_A"
+  app_key: "957a96f9-a058-45da-90cf-a7dd1b491466"  # Keep this secret!
+  
+  # API endpoint
+  base_url: "https://global.e.mi.com"
+  
+  # Campaign identifiers
+  account_id: 18348        # Xiaomi Sub-Account ID
+  campaign_id: 276730      # Xiaomi Campaign ID
+
+# Slack Integration
+slack:
+  # Slack webhook URL for posting messages
+  # Generate at: https://api.slack.com/messaging/webhooks
+  webhook_url: "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX"
+  
+  # Slack channel ID (optional, webhook determines channel by default)
+  channel_id: "C0XXXXXXX"
+  
+  # Base URL where HTML reports will be hosted
+  # Used in Slack message links
+  report_base_url: "https://reports.yourcompany.com/miads"
+
+# Output Configuration
+output:
+  # Base directory for report files
+  # Reports will be stored in: base_path/YYYY/MM/DD/
+  base_path: "/outputs/miads_reports"
+  
+  # Path to HTML template file
+  # The template will be loaded and updated with new data
+  template_path: "/path/to/santander-miads-daily-report.html"
+  
+  # Timezone for date calculations
+  timezone: "UTC"
+
+# Report Metadata
+report:
+  # Campaign information (used in HTML header)
+  advertiser: "Santander México"
+  platform: "MiAds"
+  channel: "Web Display"
+  region: "México"
+  purchase_type: "CPC"
+
+# Email Configuration (optional)
+email:
+  enabled: false
+  smtp_host: "smtp.gmail.com"
+  smtp_port: 587
+  sender: "reports@yourcompany.com"
+  # Store password in environment variable or secure vault
+  recipients:
+    - "team@yourcompany.com"
+    - "analytics@yourcompany.com"
+
+# Database Configuration (optional, for metrics logging)
+database:
+  enabled: false
+  type: "sqlite"  # or "postgresql"
+  path: "/var/lib/miads/metrics.db"  # for sqlite
+  # host: "db.internal.com"  # for postgresql
+  # database: "miads_metrics"
+  # user: "app_user"
+  # password: "app_password"
+
+# Logging Configuration
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  file: "miads_reporter.log"
+  max_size_mb: 10
+  backup_count: 5
+
+# Scheduling
+schedule:
+  enabled: true
+  cron_expression: "0 8 * * *"  # Daily at 8 AM UTC
+  timezone: "UTC"
+
+# Error Handling & Retries
+errors:
+  # Retry policy for API failures
+  max_retries: 3
+  retry_backoff_base: 2  # seconds, exponential backoff
+  
+  # Continue if FX rate fetch fails (use last known rate)
+  fx_rate_fallback: true
+  
+  # Send email alert on error
+  alert_on_error: true
+
+# Advanced Options
+advanced:
+  # Use cached FX rate if < 24 hours old
+  cache_fx_rate: true
+  
+  # Parallel processing for multi-account
+  parallel_accounts: false
+  max_workers: 3
+  
+  # Performance tuning
+  batch_size: 1000  # Records per API page
+  timeout_seconds: 30
+  
+  # Debug mode
+  debug: false
+
+# Notes:
+# 
+# 1. Store sensitive data (app_key, webhook_url) in environment variables:
+#    export XIAOMI_APP_KEY="..."
+#    export SLACK_WEBHOOK_URL="..."
+#
+# 2. For production, use a secrets manager:
+#    - AWS Secrets Manager
+#    - Google Secret Manager
+#    - HashiCorp Vault
+#    - LastPass or 1Password
+#
+# 3. Set proper file permissions:
+#    chmod 600 config.yaml
+#
+# 4. Test configuration:
+#    python3 miads_reporter.py --config config.yaml --date 2026-05-03
+#
